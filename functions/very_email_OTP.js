@@ -1,4 +1,4 @@
-const User = require('../database/models/app_user.model');
+const User = require('../database/models/user.model');
 const _Error = require('../utils/_error');
 
 const very_email_OTP = async (params) => {
