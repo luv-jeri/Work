@@ -1,5 +1,10 @@
 const express = require('express');
 const morgan = require('morgan');
+const rateLimit = require('express-rate-limit');
+const helmet = require('helmet');
+const mongoSanitize = require('express-mongo-sanitize');
+const xss = require('xss-clean');
+const hpp = require('hpp');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const compression = require('compression');
@@ -21,9 +26,33 @@ app.use(
   })
 );
 
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // limit each IP to 100 requests per windowMs
+  message:
+    'Too many requests from this IP, please try again later',
+});
+// * Set security HTTP headers
+app.use(helmet());
+app.use(mongoSanitize());
+app.use(xss());
+app.use(
+  hpp({
+    whitelist: [
+      'genre',
+      'rating',
+      'director',
+      'actors',
+      'language',
+      'releaseDate',
+      'duration',
+    ],
+  })
+);
 //*  Express Middleware
+app.use('/api', limiter);
 app.use(cookieParser());
-app.use(express.json());
+app.use(express.json({ limit: '10kb' }));
 app.use(compression());
 // if (process.env.NODE_ENV === 'development') {
 app.use(morgan('dev')); // ? Middleware to show req and res details.

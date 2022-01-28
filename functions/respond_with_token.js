@@ -4,9 +4,8 @@ const respond_with_token = (user, status, res) => {
   const token = jwt_token(user);
 
   const cookie_options = {
-    // domain: 'coffee',
     expires: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000),
-    // httpOnly: false,
+    httpOnly: false,
     // secure: true,
   };
 
