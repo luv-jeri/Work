@@ -32,12 +32,14 @@ class APIAddons {
     // ` Refactor query string i.e. gte -> $gte
     let query_string = JSON.stringify(query_object);
     query_string = query_string.replace(
-      /\b(gte|gt|lte|lt|ne|eq|regex)\b/g,
+      /\b(gte|gt|lte|lt|ne|eq|regex|in|ne)\b/g,
       (match) => `$${match}`
     );
 
     // ` Execute query
     this.query = this.query.find(JSON.parse(query_string));
+  
+
 
     // ` Return query [this.query ,  this.queryString]
     return this;
